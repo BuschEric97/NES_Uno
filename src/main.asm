@@ -74,4 +74,13 @@ title_screen_game:
 
 ; this subroutine is called when GAMEFLAG G bit is 1
 main_game:
+    lda gamepad_new_press
+    and PRESS_A
+    cmp PRESS_A
+    bne a_not_pressed
+        lda #%00110000
+        sta BGCARDID
+        jsr draw_bg_card
+    a_not_pressed:
+
     rts 

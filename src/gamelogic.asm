@@ -33,13 +33,13 @@ generate_deck:
     lda #%10101000  ; 9
     sta DECK+17
     sta DECK+18
-    lda #%10110000  ; skip
+    lda #%10101100  ; skip
     sta DECK+19
     sta DECK+20
-    lda #%10110100  ; reverse
+    lda #%10110000  ; reverse
     sta DECK+21
     sta DECK+22
-    lda #%10111000  ; draw 2
+    lda #%10110100  ; draw 2
     sta DECK+23
     sta DECK+24
 
@@ -73,13 +73,13 @@ generate_deck:
     lda #%10101001  ; 9
     sta DECK+42
     sta DECK+43
-    lda #%10110001  ; skip
+    lda #%10101101  ; skip
     sta DECK+44
     sta DECK+45
-    lda #%10110101  ; reverse
+    lda #%10110001  ; reverse
     sta DECK+46
     sta DECK+47
-    lda #%10111001  ; draw 2
+    lda #%10110101  ; draw 2
     sta DECK+48
     sta DECK+49
 
@@ -113,13 +113,13 @@ generate_deck:
     lda #%10101010  ; 9
     sta DECK+67
     sta DECK+68
-    lda #%10110010  ; skip
+    lda #%10101110  ; skip
     sta DECK+69
     sta DECK+70
-    lda #%10110110  ; reverse
+    lda #%10110010  ; reverse
     sta DECK+71
     sta DECK+72
-    lda #%10111010  ; draw 2
+    lda #%10110110  ; draw 2
     sta DECK+73
     sta DECK+74
 
@@ -153,13 +153,13 @@ generate_deck:
     lda #%10101011  ; 9
     sta DECK+92
     sta DECK+93
-    lda #%10110011  ; skip
+    lda #%10101111  ; skip
     sta DECK+94
     sta DECK+95
-    lda #%10110111  ; reverse
+    lda #%10110011  ; reverse
     sta DECK+96
     sta DECK+97
-    lda #%10111011  ; draw 2
+    lda #%10110111  ; draw 2
     sta DECK+98
     sta DECK+99
 

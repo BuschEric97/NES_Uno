@@ -3,6 +3,8 @@
 
 .segment "ZEROPAGE"
     GAMEFLAG: .res 1        ; #%000000WG (W == win flag, G == game flag)
+    CURCARD: .res 1         ; #%BWVVVVCC (B == back showing indicator, W == wild indicator, VVVV == value (1-indexed), CC == color)
+    DECK: .res 108
 
 .segment "VARS"
 
@@ -12,6 +14,7 @@
 .include "ppu.asm"
 .include "palette.asm"
 
+.include "random.asm"
 .include "drawing.asm"
 .include "gamelogic.asm"
 
@@ -27,6 +30,15 @@ game_loop:
 
     ; get gamepad inputs
     jsr set_gamepads
+
+    ; increment seed to enhance pseudo-randomness
+    lda seed+1
+    clc 
+    adc #1
+    sta seed+1
+    lda seed
+    adc #0
+    sta seed
 
     lda GAMEFLAG
     and #%00000001
@@ -49,6 +61,11 @@ title_screen_game:
     bne title_start_not_pressed
         lda #%00000001
         sta GAMEFLAG    ; set GAMEFLAG to 1 to indicate a game is being played
+
+        jsr generate_deck
+        ; shuffle deck twice for better randomness at start of game
+        jsr shuffle_deck
+        jsr shuffle_deck
 
         jsr clear_background
     title_start_not_pressed:

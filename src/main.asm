@@ -78,8 +78,11 @@ main_game:
     and PRESS_A
     cmp PRESS_A
     bne a_not_pressed
-        lda #%00110000
+        lda #%00110001
         sta BGCARDID
+        lda #8
+        sta BGCARDPOS
+        sta BGCARDPOS+1
         jsr draw_bg_card
     a_not_pressed:
 

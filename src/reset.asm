@@ -133,4 +133,7 @@ RESET:
     sta $2005
     sta $2005
 
+    lda #0
+    sta GAMEFLAG
+
     jmp game_loop   ; start the wait loop

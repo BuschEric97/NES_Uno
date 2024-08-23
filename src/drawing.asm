@@ -23,6 +23,81 @@ draw_bg_card:
     lda #%00000000
     sta $2001
 
+    ; set bg attributes for card color
+
+    ; get needed attribute byte
+    lda BGCARDPOS+1
+    asl                 ; Y_POS * 2
+    and #%11111000      ; round down to nearest 8
+    sta BGCARDATTLBYTE  ; store result temporarily
+    lda BGCARDPOS
+    lsr 
+    lsr                 ; X_POS / 4
+    clc 
+    adc BGCARDATTLBYTE  ; ADD to stored result
+    sta BGCARDATTLBYTE  ; store final result
+
+    ; determine which half-nybble to modify
+    lda BGCARDPOS+1
+    and #%00000010
+    tax 
+    lda BGCARDPOS
+    lsr 
+    lsr                 ; carry has what we need to add now
+    txa 
+    adc #0
+    tax                 ; X now has the number of times we need to shift left twice
+    tay                 ; copy A to Y as well
+
+    ; modify the corresponding bg attribute
+    lda BGCARDID
+    and #%00000011
+    bg_card_att_left_shift_loop_0:
+        cpx #0
+        beq bg_card_att_left_shift_loop_0_done
+        dex 
+        asl 
+        asl 
+        jmp bg_card_att_left_shift_loop_0
+    bg_card_att_left_shift_loop_0_done:
+    sta BGCARDATTRIBUTE
+
+    lda $2002
+    lda #$23
+    sta $2006
+    lda #$C0
+    clc 
+    adc BGCARDATTLBYTE
+    sta $2006
+    lda $2007           ; first read is invalid
+    lda $2007           ; load current attributes
+
+    sta BGCARDATTTEMP
+    lda #%00000011
+    bg_card_att_left_shift_loop_1:
+        cpy #0
+        beq bg_card_att_left_shift_loop_1_done
+        dey 
+        asl 
+        asl 
+        jmp bg_card_att_left_shift_loop_1
+    bg_card_att_left_shift_loop_1_done:
+    eor #%11111111      ; invert the mask
+    and BGCARDATTTEMP
+    clc 
+    adc BGCARDATTRIBUTE
+    sta BGCARDATTRIBUTE
+
+    lda $2002
+    lda #$23
+    sta $2006
+    lda #$C0
+    clc 
+    adc BGCARDATTLBYTE
+    sta $2006
+    lda BGCARDATTRIBUTE
+    sta $2007           ; store attributes
+
     ; get the high and low byte of the card position
     ; BGCARDBYTES == BGCARDPOS + (BGCARDPOS+1 * 32)
 
@@ -140,84 +215,6 @@ draw_bg_card:
         lda #$53
         sta $2007
     bottom_back_done:
-
-    ; set bg attributes for card color
-    lda #8
-    sta BGCARDPOS
-    sta BGCARDPOS+1
-
-    ; get needed attribute byte
-    lda BGCARDPOS+1
-    asl                 ; Y_POS * 2
-    and #%11111000      ; round down to nearest 8
-    sta BGCARDATTLBYTE  ; store result temporarily
-    lda BGCARDPOS
-    lsr 
-    lsr                 ; X_POS / 4
-    clc 
-    adc BGCARDATTLBYTE  ; ADD to stored result
-    sta BGCARDATTLBYTE  ; store final result
-
-    ; determine which half-nybble to modify
-    lda BGCARDPOS+1
-    and #%00000010
-    tax 
-    lda BGCARDPOS
-    lsr 
-    lsr                 ; carry has what we need to add now
-    txa 
-    adc #0
-    tax                 ; X now has the number of times we need to shift left twice
-    tay                 ; copy A to Y as well
-
-    ; modify the corresponding bg attribute
-    lda BGCARDID
-    and #%00000011
-    bg_card_att_left_shift_loop_0:
-        cpx #0
-        beq bg_card_att_left_shift_loop_0_done
-        dex 
-        asl 
-        asl 
-        jmp bg_card_att_left_shift_loop_0
-    bg_card_att_left_shift_loop_0_done:
-    sta BGCARDATTRIBUTE
-
-    lda $2002
-    lda #$23
-    sta $2006
-    lda #$C0
-    clc 
-    adc BGCARDATTLBYTE
-    sta $2006
-    lda $2007           ; first read is invalid
-    lda $2007           ; load current attributes
-
-    sta BGCARDATTTEMP
-    lda #%00000011
-    bg_card_att_left_shift_loop_1:
-        cpy #0
-        beq bg_card_att_left_shift_loop_1_done
-        dey 
-        asl 
-        asl 
-        jmp bg_card_att_left_shift_loop_1
-    bg_card_att_left_shift_loop_1_done:
-    eor #%11111111      ; invert the mask
-    and BGCARDATTTEMP
-    clc 
-    adc BGCARDATTRIBUTE
-    sta BGCARDATTRIBUTE
-
-    lda $2002
-    lda #$23
-    sta $2006
-    lda #$C0
-    clc 
-    adc BGCARDATTLBYTE
-    sta $2006
-    lda BGCARDATTRIBUTE
-    sta $2007           ; store attributes
 
     done_drawing_bg_card:
     ; enable sprites and background rendering

@@ -4,7 +4,6 @@
 .segment "ZEROPAGE"
     GAMEFLAG: .res 1        ; #%000000WG (W == win flag, G == game flag)
     CURCARD: .res 1         ; #%BWVVVVCC (B == back showing indicator, W == wild indicator, VVVV == value (1-indexed), CC == color)
-    DECK: .res 108
 
 .segment "VARS"
 
@@ -24,6 +23,12 @@
 .include "reset.asm"
 
 .segment "CODE"
+DECK: .byte 108
+PLAYERHAND: .byte 50
+CPU1HAND: .byte 50
+CPU2HAND: .byte 50
+CPU3HAND: .byte 50
+
 game_loop:
     lda nmi_ready
     bne game_loop

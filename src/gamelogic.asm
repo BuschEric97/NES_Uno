@@ -248,6 +248,7 @@ deal_board:
     ; player
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND
     lda #0
     sta DECK, x 
@@ -256,6 +257,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND+1
     lda #0
     sta DECK, x 
@@ -264,6 +266,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND+2
     lda #0
     sta DECK, x 
@@ -272,6 +275,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND+3
     lda #0
     sta DECK, x 
@@ -280,6 +284,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND+4
     lda #0
     sta DECK, x 
@@ -288,6 +293,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND+5
     lda #0
     sta DECK, x 
@@ -296,6 +302,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta PLAYERHAND+6
     lda #0
     sta DECK, x 

@@ -1,8 +1,11 @@
-.define DECKXPOS        #$0C
-.define DECKYPOS        #$0E
+.define DECKXPOS            #$0C
+.define DECKYPOS            #$0E
 
-.define DISCARDXPOS     #$10
-.define DISCARDYPOS     #$0E
+.define DISCARDXPOS         #$10
+.define DISCARDYPOS         #$0E
+
+.define PLAYERHANDLEFTXPOS  #$04
+.define PLAYERHANDYPOS      #$18
 
 .segment "ZEROPAGE"
     BGCARDID: .res 1
@@ -19,6 +22,33 @@ draw_sprites:
     ; draw all sprites to screen
     lda #$02
     sta $4014
+
+    rts 
+
+draw_player_hand:
+    ldx #0
+    player_hand_loop:
+        lda PLAYERHAND, x 
+        beq player_hand_loop_end    ; break out of loop once we hit an empty card slot
+        sta BGCARDID
+
+        txa 
+        asl 
+        clc 
+        adc PLAYERHANDLEFTXPOS
+        sta BGCARDPOS
+        lda PLAYERHANDYPOS
+        sta BGCARDPOS+1
+
+        txa 
+        pha 
+        jsr draw_bg_card
+        pla 
+        tax 
+
+        inx 
+        jmp player_hand_loop
+    player_hand_loop_end:
 
     rts 
 

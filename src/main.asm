@@ -94,6 +94,8 @@ main_game:
         sta DISCARD
 
         jsr draw_discard
+
+        jsr draw_player_hand
     a_not_pressed:
 
     rts 

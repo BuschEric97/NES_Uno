@@ -89,6 +89,13 @@ draw_bg_card:
 
     ; modify the corresponding bg attribute
     lda BGCARDID
+    and #%10000000
+    beq bg_card_att_card_not_back
+        ; the color of the card should always be red when drawing the card back
+        lda #0
+        jmp bg_card_att_left_shift_loop_0_done
+    bg_card_att_card_not_back:
+    lda BGCARDID
     and #%00000011
     bg_card_att_left_shift_loop_0:
         cpx #0

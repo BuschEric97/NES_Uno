@@ -1,3 +1,9 @@
+.define DECKXPOS        #$0C
+.define DECKYPOS        #$0E
+
+.define DISCARDXPOS     #$10
+.define DISCARDYPOS     #$0E
+
 .segment "ZEROPAGE"
     BGCARDID: .res 1
     BGCARDPOS: .res 2       ; first byte == X pos, second byte == Y pos
@@ -14,6 +20,38 @@ draw_sprites:
     lda #$02
     sta $4014
 
+    rts 
+
+draw_discard:
+    ldx DISCARDINDEX
+    lda DISCARD, x
+    beq done_drawing_discard
+    sta BGCARDID
+
+    lda DISCARDXPOS
+    sta BGCARDPOS
+    lda DISCARDYPOS
+    sta BGCARDPOS+1
+
+    jsr draw_bg_card
+
+    done_drawing_discard:
+    rts 
+
+draw_deck:
+    ldx DECKINDEX
+    lda DECK, x
+    beq done_drawing_deck
+    sta BGCARDID
+
+    lda DECKXPOS
+    sta BGCARDPOS
+    lda DECKYPOS
+    sta BGCARDPOS+1
+
+    jsr draw_bg_card
+
+    done_drawing_deck:
     rts 
 
 draw_bg_card:

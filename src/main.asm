@@ -4,8 +4,16 @@
 .segment "ZEROPAGE"
     GAMEFLAG: .res 1        ; #%000000WG (W == win flag, G == game flag)
     CURCARD: .res 1         ; #%BWVVVVCC (B == back showing indicator, W == wild indicator, VVVV == value (1-indexed), CC == color)
+    DECKINDEX: .res 1       ; number between 0-107 inclusive for the index offset of top card of deck, equals #$FF if deck is empty
+    DISCARDINDEX: .res 1    ; number between 0-107 inclusive for the index offset of top card of discard pile
 
 .segment "VARS"
+DECK: .res 108
+DISCARD: .res 108
+PLAYERHAND: .res 50
+CPU1HAND: .res 50
+CPU2HAND: .res 50
+CPU3HAND: .res 50
 
 .include "header.asm"
 .include "utils.asm"
@@ -23,11 +31,6 @@
 .include "reset.asm"
 
 .segment "CODE"
-DECK: .byte 108
-PLAYERHAND: .byte 50
-CPU1HAND: .byte 50
-CPU2HAND: .byte 50
-CPU3HAND: .byte 50
 
 game_loop:
     lda nmi_ready
@@ -83,12 +86,17 @@ main_game:
     and PRESS_A
     cmp PRESS_A
     bne a_not_pressed
-        lda #%00110001
-        sta BGCARDID
-        lda #8
-        sta BGCARDPOS
-        sta BGCARDPOS+1
-        jsr draw_bg_card
+        lda #0
+        sta DECKINDEX
+        sta DISCARDINDEX
+        
+        jsr draw_deck
+
+        lda DECK
+        and #%01111111
+        sta DISCARD
+
+        jsr draw_discard
     a_not_pressed:
 
     rts 

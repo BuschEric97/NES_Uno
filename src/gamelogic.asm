@@ -227,3 +227,250 @@ shuffle_deck:
         bne deck_shuffle_loop
 
     rts 
+
+deal_board:
+    ; generate an initial ordered deck
+    jsr generate_deck
+
+    ; shuffle deck twice for better randomness at start of game
+    jsr shuffle_deck
+    jsr shuffle_deck
+
+    ; set initial top deck index
+    lda #107
+    sta DECKINDEX
+
+    ; set initial top discard index
+    lda #0
+    sta DISCARDINDEX
+
+    ; deal cards to each player
+    ; player
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND+1
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND+2
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND+3
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND+4
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND+5
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta PLAYERHAND+6
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+    
+    ; cpu0
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND+1
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND+2
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND+3
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND+4
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND+5
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU0HAND+6
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ; cpu1
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND+1
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND+2
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND+3
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND+4
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND+5
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU1HAND+6
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ; cpu2
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND+1
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND+2
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND+3
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND+4
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND+5
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    ldx DECKINDEX
+    lda DECK, x 
+    sta CPU2HAND+6
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
+    rts 

@@ -11,9 +11,9 @@
 DECK: .res 108
 DISCARD: .res 108
 PLAYERHAND: .res 50
+CPU0HAND: .res 50
 CPU1HAND: .res 50
 CPU2HAND: .res 50
-CPU3HAND: .res 50
 
 .include "header.asm"
 .include "utils.asm"
@@ -70,12 +70,9 @@ title_screen_game:
         lda #%00000001
         sta GAMEFLAG    ; set GAMEFLAG to 1 to indicate a game is being played
 
-        jsr generate_deck
-        ; shuffle deck twice for better randomness at start of game
-        jsr shuffle_deck
-        jsr shuffle_deck
-
         jsr clear_background
+
+        jsr deal_board
     title_start_not_pressed:
 
     rts 

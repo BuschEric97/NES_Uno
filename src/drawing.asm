@@ -26,6 +26,29 @@ draw_sprites:
 
     rts 
 
+draw_cursor:
+    lda CURSORTILEPOS+1
+    asl 
+    asl 
+    asl 
+    sta $0200               ; cursor Y pos
+
+    lda #$00
+    sta $0201               ; cursor tile number
+
+    lda #%00000000
+    sta $0202               ; cursor attributes
+
+    lda CURSORTILEPOS
+    asl 
+    asl 
+    asl 
+    sta $0203               ; cursor X pos
+
+    jsr draw_sprites
+
+    rts 
+
 draw_player_hand:
     ldx #0
     ldy #0

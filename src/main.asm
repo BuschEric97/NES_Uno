@@ -6,6 +6,7 @@
     CURCARD: .res 1         ; #%BWVVVVCC (B == back showing indicator, W == wild indicator, VVVV == value (1-indexed), CC == color)
     DECKINDEX: .res 1       ; number between 0-107 inclusive for the index offset of top card of deck, equals #$FF if deck is empty
     DISCARDINDEX: .res 1    ; number between 0-107 inclusive for the index offset of top card of discard pile
+    CURSORTILEPOS: .res 2   ; first byte == X pos, second byte == Y pos
 
 .segment "VARS"
 DECK: .res 108
@@ -79,6 +80,46 @@ title_screen_game:
 
 ; this subroutine is called when GAMEFLAG G bit is 1
 main_game:
+    ; get cursor movement from DPAD input
+    lda gamepad_new_press
+    and PRESS_UP
+    cmp PRESS_UP
+    bne up_not_pressed
+        lda CURSORTILEPOS+1
+        sec 
+        sbc #2
+        sta CURSORTILEPOS+1
+    up_not_pressed:
+    lda gamepad_new_press
+    and PRESS_RIGHT
+    cmp PRESS_RIGHT
+    bne right_not_pressed
+        lda CURSORTILEPOS
+        clc 
+        adc #2
+        sta CURSORTILEPOS
+    right_not_pressed:
+    lda gamepad_new_press
+    and PRESS_DOWN
+    cmp PRESS_DOWN
+    bne down_not_pressed
+        lda CURSORTILEPOS+1
+        clc 
+        adc #2
+        sta CURSORTILEPOS+1
+    down_not_pressed:
+    lda gamepad_new_press
+    and PRESS_LEFT
+    cmp PRESS_LEFT
+    bne left_not_pressed
+        lda CURSORTILEPOS
+        sec 
+        sbc #2
+        sta CURSORTILEPOS
+    left_not_pressed:
+
+    jsr draw_cursor
+
     lda gamepad_new_press
     and PRESS_A
     cmp PRESS_A

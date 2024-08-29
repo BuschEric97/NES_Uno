@@ -135,5 +135,8 @@ RESET:
 
     lda #0
     sta GAMEFLAG
+    lda #1
+    sta CURSORTILEPOS
+    sta CURSORTILEPOS+1
 
     jmp game_loop   ; start the wait loop

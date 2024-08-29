@@ -6,6 +6,7 @@
 
 .define PLAYERHANDLEFTXPOS  #$04
 .define PLAYERHANDYPOS      #$18
+.define PLAYERHANDVISLIMIT  #12
 
 .segment "ZEROPAGE"
     BGCARDID: .res 1
@@ -27,7 +28,10 @@ draw_sprites:
 
 draw_player_hand:
     ldx #0
+    ldy #0
     player_hand_loop:
+        cpy PLAYERHANDVISLIMIT
+        beq player_hand_loop_end    ; break out of loop if we hit visible hand limit
         lda PLAYERHAND, x 
         beq player_hand_loop_end    ; break out of loop once we hit an empty card slot
         sta BGCARDID
@@ -42,11 +46,16 @@ draw_player_hand:
 
         txa 
         pha 
+        tya 
+        pha 
         jsr draw_bg_card
+        pla 
+        tay 
         pla 
         tax 
 
         inx 
+        iny 
         jmp player_hand_loop
     player_hand_loop_end:
 

@@ -88,13 +88,7 @@ main_game:
         sta DISCARDINDEX
         
         jsr draw_deck
-
-        lda DECK
-        and #%01111111
-        sta DISCARD
-
         jsr draw_discard
-
         jsr draw_player_hand
     a_not_pressed:
 

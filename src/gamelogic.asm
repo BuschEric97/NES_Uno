@@ -480,4 +480,14 @@ deal_board:
     dex 
     stx DECKINDEX
 
+    ; set initial discard pile
+    ldx DECKINDEX
+    lda DECK, x 
+    and #%01111111
+    sta DISCARD
+    lda #0
+    sta DECK, x 
+    dex 
+    stx DECKINDEX
+
     rts 

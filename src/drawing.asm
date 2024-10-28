@@ -49,6 +49,45 @@ draw_cursor:
 
     rts 
 
+draw_sel_cursor:
+    lda FRAMECOUNTER
+    and #%00000001
+    bne sel_cursor_odd_frame
+    sel_cursor_even_frame:
+        lda #$FF
+        sta $0204
+        sta $0207
+
+        lda #$00
+        sta $0205
+
+        lda #%00000000
+        sta $0206
+
+        jmp done_drawing_sel_cursor
+    
+    sel_cursor_odd_frame:
+        lda SELCURSTILEPOS+1
+        asl
+        asl
+        asl
+        sta $0204
+
+        lda #$00
+        sta $0205
+
+        lda #%00000000
+        sta $0206
+
+        lda SELCURSTILEPOS
+        asl
+        asl
+        asl
+        sta $0207
+
+    done_drawing_sel_cursor:
+    rts
+
 draw_player_hand:
     ldx #0
     ldy #0

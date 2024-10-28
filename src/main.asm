@@ -7,6 +7,8 @@
     DECKINDEX: .res 1       ; number between 0-107 inclusive for the index offset of top card of deck, equals #$FF if deck is empty
     DISCARDINDEX: .res 1    ; number between 0-107 inclusive for the index offset of top card of discard pile
     CURSORTILEPOS: .res 2   ; first byte == X pos, second byte == Y pos
+    SELCURSTILEPOS: .res 2  ; first byte == X pos, second byte == Y pos
+    FRAMECOUNTER: .res 1    ; keep track of if we're on an even or odd frame in order to animate selection cursor
 
 .segment "VARS"
 DECK: .res 108
@@ -49,6 +51,12 @@ game_loop:
     adc #0
     sta seed
 
+    ; increment frame counter every frame
+    lda FRAMECOUNTER
+    clc
+    adc #1
+    sta FRAMECOUNTER
+
     lda GAMEFLAG
     and #%00000001
     bne run_main_game
@@ -71,9 +79,23 @@ title_screen_game:
         lda #%00000001
         sta GAMEFLAG    ; set GAMEFLAG to 1 to indicate a game is being played
 
-        jsr clear_background
+        ; initially hide selection cursor
+        lda #$FF
+        sta SELCURSTILEPOS
+        sta SELCURSTILEPOS+1
 
-        jsr deal_board
+        jsr clear_background    ; clear title screen from background
+
+        jsr deal_board          ; set initial game state
+
+        lda #0
+        sta DECKINDEX
+        sta DISCARDINDEX
+        
+        ; display initial game state
+        jsr draw_deck
+        jsr draw_discard
+        jsr draw_player_hand
     title_start_not_pressed:
 
     rts 
@@ -119,18 +141,27 @@ main_game:
     left_not_pressed:
 
     jsr draw_cursor
+    jsr draw_sel_cursor
 
     lda gamepad_new_press
     and PRESS_A
     cmp PRESS_A
     bne a_not_pressed
-        lda #0
-        sta DECKINDEX
-        sta DISCARDINDEX
-        
-        jsr draw_deck
-        jsr draw_discard
-        jsr draw_player_hand
+        ; spawn or despawn selection cursor at current cursor position
+        lda SELCURSTILEPOS+1
+        cmp #$FF
+        beq spawn_sel_cursor
+        despawn_sel_cursor:
+            lda #$FF
+            sta SELCURSTILEPOS
+            sta SELCURSTILEPOS+1
+            jmp done_handle_sel_cursor
+        spawn_sel_cursor:
+            lda CURSORTILEPOS
+            sta SELCURSTILEPOS
+            lda CURSORTILEPOS+1
+            sta SELCURSTILEPOS+1
+        done_handle_sel_cursor:
     a_not_pressed:
 
     rts 

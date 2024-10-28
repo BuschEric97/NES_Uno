@@ -51,7 +51,7 @@ draw_cursor:
 
 draw_sel_cursor:
     lda FRAMECOUNTER
-    and #%00000001
+    and #%00001000
     bne sel_cursor_odd_frame
     sel_cursor_even_frame:
         lda #$FF

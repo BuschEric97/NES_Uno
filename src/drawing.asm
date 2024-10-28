@@ -4,6 +4,15 @@
 .define DISCARDXPOS         #$10
 .define DISCARDYPOS         #$0E
 
+.define CPU0XPOS            #$02
+.define CPU0YPOS            #$0E
+
+.define CPU1XPOS            #$0E
+.define CPU1YPOS            #$02
+
+.define CPU2XPOS            #$1C
+.define CPU2YPOS            #$0E
+
 .define PLAYERHANDLEFTXPOS  #$04
 .define PLAYERHANDYPOS      #$18
 .define PLAYERHANDVISLIMIT  #12
@@ -15,6 +24,7 @@
     BGCARDATTLBYTE: .res 1
     BGCARDATTRIBUTE: .res 1
     BGCARDATTTEMP: .res 1
+    CURSORTRANS: .res 1     ; helper byte for translate_cursors_pos subroutine
 
 .segment "CODE"
 draw_sprites:
@@ -122,6 +132,36 @@ draw_player_hand:
     player_hand_loop_end:
 
     rts 
+
+draw_cpu_hands:
+    ; CPU0
+    lda #%10000000
+    sta BGCARDID
+    lda CPU0XPOS
+    sta BGCARDPOS
+    lda CPU0YPOS
+    sta BGCARDPOS+1
+    jsr draw_bg_card
+
+    ; CPU1
+    lda #%10000000
+    sta BGCARDID
+    lda CPU1XPOS
+    sta BGCARDPOS
+    lda CPU1YPOS
+    sta BGCARDPOS+1
+    jsr draw_bg_card
+
+    ; CPU2
+    lda #%10000000
+    sta BGCARDID
+    lda CPU2XPOS
+    sta BGCARDPOS
+    lda CPU2YPOS
+    sta BGCARDPOS+1
+    jsr draw_bg_card
+
+    rts
 
 draw_discard:
     ldx DISCARDINDEX
@@ -422,3 +462,120 @@ clear_background:
     sta $2005
 
     rts 
+
+translate_cursors_pos:
+    ; uses CURSORSPOS (#%XXXXYYYY)
+    ; for YYYY == 0000; always map to [CPU1 hand location]
+    ; for YYYY == 0001; XXXX == xx00 maps to [CPU0 hand location], XXXX == xx01 maps to [deck location], XXXX == xx10 maps to [discard location], XXXX == xx11 maps to [CPU2 hand location]
+    ; for YYYY == 0010; XXXX corresponds to offset from leftmost card in player hand where XXXX == 0000 maps to [player hand location]
+    lda CURSORSPOS
+    and #%00000011
+    beq cursor_pos_y_0
+        sec
+        sbc #1
+    beq cursor_pos_y_1
+        sec
+        sbc #1
+    beq cursor_pos_y_2
+        jmp done_translating_cursors_pos    ; return from subroutine if YYYY is out of bounds
+    cursor_pos_y_0:
+        lda CPU1XPOS
+        clc 
+        adc #1
+        sta CURSORTILEPOS
+        
+        lda CPU1YPOS
+        clc
+        adc #1
+        sta CURSORTILEPOS+1
+
+        jmp done_translating_cursors_pos
+    cursor_pos_y_1:
+        lda CURSORSPOS
+        and #%11110000
+        lsr
+        lsr
+        lsr
+        lsr
+        beq cursor_pos_cpu0
+            sec
+            sbc #1
+        beq cursor_pos_deck
+            sec
+            sbc #1
+        beq cursor_pos_discard
+            sec
+            sbc #1
+        beq cursor_pos_cpu2
+            ; fix XXXX if greater than 3 here then jump to cursor_pos_cpu2
+            lda CURSORSPOS
+            and #%00001111
+            clc
+            adc #%00110000
+            sta CURSORSPOS
+            jmp cursor_pos_cpu2
+        cursor_pos_cpu0:
+            lda CPU0XPOS
+            clc 
+            adc #1
+            sta CURSORTILEPOS
+            
+            lda CPU0YPOS
+            clc
+            adc #1
+            sta CURSORTILEPOS+1
+
+            jmp done_translating_cursors_pos
+        cursor_pos_deck:
+            lda DECKXPOS
+            clc 
+            adc #1
+            sta CURSORTILEPOS
+            
+            lda DECKYPOS
+            clc
+            adc #1
+            sta CURSORTILEPOS+1
+
+            jmp done_translating_cursors_pos
+        cursor_pos_discard:
+            lda DISCARDXPOS
+            clc 
+            adc #1
+            sta CURSORTILEPOS
+            
+            lda DISCARDYPOS
+            clc
+            adc #1
+            sta CURSORTILEPOS+1
+
+            jmp done_translating_cursors_pos
+        cursor_pos_cpu2:
+            lda CPU2XPOS
+            clc 
+            adc #1
+            sta CURSORTILEPOS
+            
+            lda CPU2YPOS
+            clc
+            adc #1
+            sta CURSORTILEPOS+1
+
+            jmp done_translating_cursors_pos
+    cursor_pos_y_2:
+        lda CURSORSPOS
+        and #%11110000
+        lsr
+        lsr
+        lsr
+        sec ; replaces adc #1
+        adc PLAYERHANDLEFTXPOS
+        sta CURSORTILEPOS
+        
+        lda PLAYERHANDYPOS
+        clc
+        adc #1
+        sta CURSORTILEPOS+1
+
+    done_translating_cursors_pos:
+    rts

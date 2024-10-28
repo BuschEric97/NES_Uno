@@ -6,6 +6,7 @@
     CURCARD: .res 1         ; #%BWVVVVCC (B == back showing indicator, W == wild indicator, VVVV == value (1-indexed), CC == color)
     DECKINDEX: .res 1       ; number between 0-107 inclusive for the index offset of top card of deck, equals #$FF if deck is empty
     DISCARDINDEX: .res 1    ; number between 0-107 inclusive for the index offset of top card of discard pile
+    CURSORSPOS: .res 1      ; #%XXXXYYYY (XXXX == relative X pos of base cursor, YYYY == relative Y pos of base cursor), default value == #%00000010
     CURSORTILEPOS: .res 2   ; first byte == X pos, second byte == Y pos
     SELCURSTILEPOS: .res 2  ; first byte == X pos, second byte == Y pos
     FRAMECOUNTER: .res 1    ; keep track of if we're on an even or odd frame in order to animate selection cursor
@@ -96,6 +97,11 @@ title_screen_game:
         jsr draw_deck
         jsr draw_discard
         jsr draw_player_hand
+        jsr draw_cpu_hands
+
+        ; initialize CURSORSPOS with default value
+        lda #%00000010
+        sta CURSORSPOS
     title_start_not_pressed:
 
     rts 
@@ -107,38 +113,58 @@ main_game:
     and PRESS_UP
     cmp PRESS_UP
     bne up_not_pressed
-        lda CURSORTILEPOS+1
-        sec 
-        sbc #2
-        sta CURSORTILEPOS+1
+        lda CURSORSPOS
+        and #%00000011
+        beq up_not_pressed
+            lda CURSORSPOS
+            sec 
+            sbc #%00000001
+            sta CURSORSPOS
     up_not_pressed:
     lda gamepad_new_press
     and PRESS_RIGHT
     cmp PRESS_RIGHT
     bne right_not_pressed
-        lda CURSORTILEPOS
-        clc 
-        adc #2
-        sta CURSORTILEPOS
+        lda CURSORSPOS
+        and #%11110000
+        lsr
+        lsr
+        lsr
+        lsr
+        cmp PLAYERHANDVISLIMIT
+        beq right_not_pressed
+            lda CURSORSPOS
+            clc 
+            adc #%00010000
+            sta CURSORSPOS
     right_not_pressed:
     lda gamepad_new_press
     and PRESS_DOWN
     cmp PRESS_DOWN
     bne down_not_pressed
-        lda CURSORTILEPOS+1
-        clc 
-        adc #2
-        sta CURSORTILEPOS+1
+        lda CURSORSPOS
+        and #%00000011
+        cmp #%00000010
+        beq down_not_pressed
+            lda CURSORSPOS
+            clc 
+            adc #%00000001
+            sta CURSORSPOS
     down_not_pressed:
     lda gamepad_new_press
     and PRESS_LEFT
     cmp PRESS_LEFT
     bne left_not_pressed
-        lda CURSORTILEPOS
-        sec 
-        sbc #2
-        sta CURSORTILEPOS
+        lda CURSORSPOS
+        and #%11110000
+        beq left_not_pressed
+            lda CURSORSPOS
+            sec 
+            sbc #%00010000
+            sta CURSORSPOS
     left_not_pressed:
+
+    jsr translate_cursors_pos
 
     jsr draw_cursor
     jsr draw_sel_cursor

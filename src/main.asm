@@ -2,7 +2,7 @@
     .incbin "rom.chr"
 
 .segment "ZEROPAGE"
-    GAMEFLAG: .res 1        ; #%000000WG (W == win flag, G == game flag)
+    GAMEFLAG: .res 1        ; #%00000OWG (W == win flag, G == game flag, O == turn order (0 == clockwise, 1 == counter-clockwise))
     CURCARD: .res 1         ; #%BWVVVVCC (B == back showing indicator, W == wild indicator, VVVV == value (1-indexed), CC == color)
     DECKINDEX: .res 1       ; number between 0-107 inclusive for the index offset of top card of deck, equals #$FF if deck is empty
     DISCARDINDEX: .res 1    ; number between 0-107 inclusive for the index offset of top card of discard pile
@@ -95,6 +95,7 @@ title_screen_game:
         
         ; display initial game state
         jsr draw_deck
+        jsr draw_turn_order
         jsr draw_discard
         jsr draw_player_hand
         jsr draw_cpu_hands
@@ -189,5 +190,16 @@ main_game:
             sta SELCURSTILEPOS+1
         done_handle_sel_cursor:
     a_not_pressed:
+
+    lda gamepad_new_press
+    and PRESS_B
+    cmp PRESS_B
+    bne b_not_pressed
+        lda GAMEFLAG
+        eor #%00000100
+        sta GAMEFLAG
+
+        jsr draw_turn_order
+    b_not_pressed:
 
     rts 

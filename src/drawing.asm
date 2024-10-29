@@ -463,6 +463,70 @@ clear_background:
 
     rts 
 
+draw_turn_order:
+    jsr wait_for_vblank
+
+    ; disable sprites and background rendering
+    lda #%00000000
+    sta $2001
+
+    lda $2002
+    lda #$21
+    sta $2006
+    lda #$CE
+    sta $2006
+
+    lda GAMEFLAG
+    and #%00000100
+    bne draw_turn_order_counter
+    draw_turn_order_clockwise:
+        lda #$44
+        sta $2007
+        lda #$45
+        sta $2007
+
+        lda $2002
+        lda #$21
+        sta $2006
+        lda #$EE
+        sta $2006
+
+        lda #$54
+        sta $2007
+        lda #$55
+        sta $2007
+
+        jmp done_drawing_turn_order
+    draw_turn_order_counter:
+        lda #$46
+        sta $2007
+        lda #$47
+        sta $2007
+
+        lda $2002
+        lda #$21
+        sta $2006
+        lda #$EE
+        sta $2006
+
+        lda #$56
+        sta $2007
+        lda #$57
+        sta $2007
+    
+    done_drawing_turn_order:
+
+    ; enable sprites and background rendering
+    lda #%00011110
+    sta $2001
+
+    ; reset scrolling
+    lda #$00
+    sta $2005
+    sta $2005
+
+    rts
+
 translate_cursors_pos:
     ; uses CURSORSPOS (#%XXXXYYYY)
     ; for YYYY == 0000; always map to [CPU1 hand location]

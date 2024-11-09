@@ -163,6 +163,111 @@ draw_cpu_hands:
 
     rts
 
+draw_cpu0_count:
+    jsr wait_for_vblank
+
+    ; disable sprites and background rendering
+    lda #%00000000
+    sta $2001
+
+    lda $2002
+    lda #$22
+    sta $2006
+    lda #$01
+    sta $2006
+
+    lda #$2E
+    sta $2007
+    lda CPU0COUNT+1
+    clc
+    adc #$20
+    sta $2007
+    lda CPU0COUNT
+    clc
+    adc #$20
+    sta $2007
+
+    ; enable sprites and background rendering
+    lda #%00011110
+    sta $2001
+
+    ; reset scrolling
+    lda #$00
+    sta $2005
+    sta $2005
+
+    rts
+
+draw_cpu1_count:
+    jsr wait_for_vblank
+
+    ; disable sprites and background rendering
+    lda #%00000000
+    sta $2001
+
+    lda $2002
+    lda #$20
+    sta $2006
+    lda #$8D
+    sta $2006
+
+    lda #$2E
+    sta $2007
+    lda CPU1COUNT+1
+    clc
+    adc #$20
+    sta $2007
+    lda CPU1COUNT
+    clc
+    adc #$20
+    sta $2007
+
+    ; enable sprites and background rendering
+    lda #%00011110
+    sta $2001
+
+    ; reset scrolling
+    lda #$00
+    sta $2005
+    sta $2005
+
+    rts
+
+draw_cpu2_count:
+    jsr wait_for_vblank
+
+    ; disable sprites and background rendering
+    lda #%00000000
+    sta $2001
+
+    lda $2002
+    lda #$22
+    sta $2006
+    lda #$1B
+    sta $2006
+
+    lda #$2E
+    sta $2007
+    lda CPU2COUNT+1
+    clc
+    adc #$20
+    sta $2007
+    lda CPU2COUNT
+    clc
+    adc #$20
+    sta $2007
+
+    ; enable sprites and background rendering
+    lda #%00011110
+    sta $2001
+
+    ; reset scrolling
+    lda #$00
+    sta $2005
+    sta $2005
+
+    rts
+
 draw_discard:
     ldx DISCARDINDEX
     lda DISCARD, x

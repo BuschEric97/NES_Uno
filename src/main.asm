@@ -16,8 +16,11 @@ DECK: .res 108
 DISCARD: .res 108
 PLAYERHAND: .res 50
 CPU0HAND: .res 50
+CPU0COUNT: .res 2
 CPU1HAND: .res 50
+CPU1COUNT: .res 2
 CPU2HAND: .res 50
+CPU2COUNT: .res 2
 
 .include "header.asm"
 .include "utils.asm"
@@ -99,6 +102,9 @@ title_screen_game:
         jsr draw_discard
         jsr draw_player_hand
         jsr draw_cpu_hands
+        jsr draw_cpu0_count
+        jsr draw_cpu1_count
+        jsr draw_cpu2_count
 
         ; initialize CURSORSPOS with default value
         lda #%00000010

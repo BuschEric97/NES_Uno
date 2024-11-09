@@ -366,6 +366,9 @@ deal_board:
     dex 
     stx DECKINDEX
 
+    lda #7
+    sta CPU0COUNT
+
     ; cpu1
     ldx DECKINDEX
     lda DECK, x 
@@ -423,6 +426,9 @@ deal_board:
     dex 
     stx DECKINDEX
 
+    lda #7
+    sta CPU1COUNT
+
     ; cpu2
     ldx DECKINDEX
     lda DECK, x 
@@ -479,6 +485,9 @@ deal_board:
     sta DECK, x 
     dex 
     stx DECKINDEX
+
+    lda #7
+    sta CPU2COUNT
 
     ; set initial discard pile
     ldx DECKINDEX

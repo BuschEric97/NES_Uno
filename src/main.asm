@@ -89,12 +89,7 @@ title_screen_game:
         sta SELCURSTILEPOS+1
 
         jsr clear_background    ; clear title screen from background
-
         jsr deal_board          ; set initial game state
-
-        lda #0
-        sta DECKINDEX
-        sta DISCARDINDEX
         
         ; display initial game state
         jsr draw_deck

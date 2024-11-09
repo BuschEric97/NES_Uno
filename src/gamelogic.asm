@@ -312,6 +312,7 @@ deal_board:
     ; cpu0
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND
     lda #0
     sta DECK, x 
@@ -320,6 +321,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND+1
     lda #0
     sta DECK, x 
@@ -328,6 +330,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND+2
     lda #0
     sta DECK, x 
@@ -336,6 +339,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND+3
     lda #0
     sta DECK, x 
@@ -344,6 +348,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND+4
     lda #0
     sta DECK, x 
@@ -352,6 +357,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND+5
     lda #0
     sta DECK, x 
@@ -360,6 +366,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU0HAND+6
     lda #0
     sta DECK, x 
@@ -372,6 +379,7 @@ deal_board:
     ; cpu1
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND
     lda #0
     sta DECK, x 
@@ -380,6 +388,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND+1
     lda #0
     sta DECK, x 
@@ -388,6 +397,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND+2
     lda #0
     sta DECK, x 
@@ -396,6 +406,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND+3
     lda #0
     sta DECK, x 
@@ -404,6 +415,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND+4
     lda #0
     sta DECK, x 
@@ -412,6 +424,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND+5
     lda #0
     sta DECK, x 
@@ -420,6 +433,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU1HAND+6
     lda #0
     sta DECK, x 
@@ -432,6 +446,7 @@ deal_board:
     ; cpu2
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND
     lda #0
     sta DECK, x 
@@ -440,6 +455,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND+1
     lda #0
     sta DECK, x 
@@ -448,6 +464,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND+2
     lda #0
     sta DECK, x 
@@ -456,6 +473,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND+3
     lda #0
     sta DECK, x 
@@ -464,6 +482,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND+4
     lda #0
     sta DECK, x 
@@ -472,6 +491,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND+5
     lda #0
     sta DECK, x 
@@ -480,6 +500,7 @@ deal_board:
 
     ldx DECKINDEX
     lda DECK, x 
+    and #%01111111
     sta CPU2HAND+6
     lda #0
     sta DECK, x 

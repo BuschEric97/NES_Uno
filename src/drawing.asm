@@ -272,14 +272,14 @@ draw_discard:
     ldx DISCARDINDEX
     lda DISCARD, x
     beq done_drawing_discard
-    sta BGCARDID
+        sta BGCARDID
 
-    lda DISCARDXPOS
-    sta BGCARDPOS
-    lda DISCARDYPOS
-    sta BGCARDPOS+1
+        lda DISCARDXPOS
+        sta BGCARDPOS
+        lda DISCARDYPOS
+        sta BGCARDPOS+1
 
-    jsr draw_bg_card
+        jsr draw_bg_card
 
     done_drawing_discard:
     rts 
@@ -288,12 +288,12 @@ draw_deck:
     ldx DECKINDEX
     lda DECK, x
     beq done_drawing_deck
-    sta BGCARDID
+        sta BGCARDID
 
-    lda DECKXPOS
-    sta BGCARDPOS
-    lda DECKYPOS
-    sta BGCARDPOS+1
+        lda DECKXPOS
+        sta BGCARDPOS
+        lda DECKYPOS
+        sta BGCARDPOS+1
 
     jsr draw_bg_card
 
